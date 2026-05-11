@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dff4ff"/>
+      <stop offset="0.62" stop-color="#c9e4f2"/>
+      <stop offset="1" stop-color="#87b7cc"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.46" stop-color="#eef4ff"/>
+      <stop offset="1" stop-color="#d8e8f4"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#092044" flood-opacity=".22"/>
+    </filter>
+  </defs>
+  <rect width="390" height="844" fill="url(#sky)"/>
+  <path d="M0 604 C52 552 79 576 124 530 C168 486 190 526 226 486 C264 444 290 472 322 424 C348 386 367 390 390 368 L390 844 L0 844 Z" fill="#b7d9ea" opacity=".72"/>
+  <path d="M0 668 C40 612 92 626 130 584 C172 540 203 602 249 548 C293 497 326 548 390 502 L390 844 L0 844 Z" fill="#7facbe" opacity=".76"/>
+  <path d="M0 742 C52 652 92 698 150 632 C206 568 251 658 306 598 C340 560 360 566 390 538 L390 844 L0 844 Z" fill="#4f839b" opacity=".64"/>
+  <g filter="url(#shadow)">
+    <rect x="20" y="265" width="350" height="246" rx="13" fill="url(#panel)"/>
+    <g font-family="Arial, Helvetica, sans-serif" font-size="30">
+      <text x="55" y="324">😍</text><text x="111" y="324">😊</text><text x="167" y="324">😐</text><text x="223" y="324">😔</text><text x="279" y="324">😴</text>
+      <text x="55" y="374">😁</text><text x="111" y="374">😮</text><text x="167" y="374">☹️</text><text x="223" y="374">😌</text><text x="279" y="374">😎</text>
+      <text x="55" y="424">🙂</text><text x="111" y="424">😢</text><text x="167" y="424">🎵</text><text x="223" y="424">😕</text><text x="279" y="424">😡</text>
+    </g>
+    <rect x="20" y="414" width="350" height="58" fill="#a8b7dc" opacity=".86"/>
+    <rect x="20" y="472" width="350" height="39" rx="0" fill="#082653"/>
+    <text x="195" y="448" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Welcome to Text Sentiment Analysis</text>
+    <text x="195" y="496" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#ffffff">Swipe &gt;&gt;&gt;</text>
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+
+# Local/editor files
+.DS_Store
+Thumbs.db
+*.log
+
+# Stray local files
+Microsoft.Services.Store.winmd
+Pasted text.txt
