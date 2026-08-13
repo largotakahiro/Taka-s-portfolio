@@ -16,7 +16,7 @@ const navItems = ["about", "skills", "projects", "certificates", "contact"];
 const values = ["Clean Code", "User-First", "Detail Oriented", "Reliable Support"];
 
 const stats = [
-  ["5", "Projects Completed"],
+  ["6", "Projects Completed"],
   ["2", "Mobile Apps"],
   ["8", "Core Skills"],
 ];
@@ -56,6 +56,14 @@ const projects = [
       "A web application that analyzes the emotional tone of text using Natural Language Processing. Users can input any text and receive a real-time sentiment score with visual feedback.",
     tags: ["Python", "NLP", "Machine Learning", "Flask/React"],
     sentiment: true,
+  },
+  {
+    icon: "DS",
+    title: "DSWD Procurement UI/UX",
+    description:
+      "A Figma design concept for a DSWD procurement experience, focused on clear workflows, organized request tracking, and approachable interface patterns for public service operations.",
+    tags: ["Figma", "UI/UX", "Procurement"],
+    link: "https://www.figma.com/design/zLOLy6KWwJlFvq3HddIsje/DSWD?node-id=0-1&t=c9s6cqUzpuf1Y0hh-1",
   },
 ];
 
@@ -413,10 +421,14 @@ function App() {
                     ))}
                   </div>
                   <div className="projectActions">
-                    <a href="#contact">View Project</a>
-                    <a href={profile.github} target="_blank" rel="noreferrer">
-                      GitHub
+                    <a href={project.link || "#contact"} target={project.link ? "_blank" : undefined} rel={project.link ? "noreferrer" : undefined}>
+                      View Project
                     </a>
+                    {!project.link && (
+                      <a href={profile.github} target="_blank" rel="noreferrer">
+                        GitHub
+                      </a>
+                    )}
                   </div>
                 </div>
               </article>
