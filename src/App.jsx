@@ -1,538 +1,285 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { Arrow, AssetImage, BrowserWindow, PhoneMockup, WorkflowVisual } from './components/Visuals.jsx';
+import { profile, projects, experience, additional, certificates } from './data/content.js';
 
-const profile = {
-  name: "Takahiro Sanchez Largo",
-  role: "Mobile App & Web Developer",
-  location: "Philippines",
-  email: "largotakahiro@gmail.com",
-  github: "https://github.com/Kiyoshi6969",
-  linkedin: "https://www.linkedin.com/in/takahiro-largo-2700b9308/?skipRedirect=true",
-  bio:
-    "I create calm, practical digital experiences for people who need technology to feel simple and supportive. My work blends mobile app development, virtual assistance, and customer-focused problem solving with a detail-oriented approach.",
-};
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const roles = ["Mobile App Developer", "Web Developer", "Problem Solver"];
-const navItems = ["about", "skills", "projects", "certificates", "contact"];
-const values = ["Clean Code", "User-First", "Detail Oriented", "Reliable Support"];
-
-const stats = [
-  ["6", "Projects Completed"],
-  ["2", "Mobile Apps"],
-  ["8", "Core Skills"],
+const links = [
+  { label: 'Work', href: '#work' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
 ];
 
-const skillGroups = [
-  { title: "Frontend", skills: ["React", "CSS", "Responsive UI", "Accessibility"] },
-  { title: "Mobile", skills: ["Flutter", "Dart", "Kotlin", "App Maintenance"] },
-  { title: "Backend", skills: ["Firebase", "REST APIs", "SQL", "Python"] },
-  { title: "Tools", skills: ["Git", "Figma", "Debugging", "Customer Support"] },
-];
-
-const twoCitiesScreenshots = [
-  { image: "/mobile-app/two-cities-home.jpeg", title: "Home" },
-  { image: "/mobile-app/two-cities-resources.jpeg", title: "Resources" },
-  { image: "/mobile-app/two-cities-events.jpeg", title: "Events" },
-  { image: "/mobile-app/two-cities-playlist.jpeg", title: "Media" },
-];
-
-const sentimentScreenshots = [
-  { image: "/sentiment-app/sentiment-welcome.svg", title: "Welcome" },
-  { image: "/sentiment-app/sentiment-analysis.svg", title: "Analysis" },
-];
-
-const projects = [
-  {
-    icon: "CH",
-    title: "2 Cities Church App",
-    description:
-      "A mobile church application designed to connect the 2 Cities Church community. Features include sermon streaming, event schedules, announcements, and giving integration.",
-    tags: ["Flutter", "Dart", "Mobile App"],
-    featured: true,
-  },
-  {
-    icon: "SA",
-    title: "Sentiment Analysis App",
-    description:
-      "A web application that analyzes the emotional tone of text using Natural Language Processing. Users can input any text and receive a real-time sentiment score with visual feedback.",
-    tags: ["Python", "NLP", "Machine Learning", "Flask/React"],
-    sentiment: true,
-  },
-  {
-    icon: "DS",
-    title: "DSWD Procurement UI/UX",
-    description:
-      "A Figma design concept for a DSWD procurement experience, focused on clear workflows, organized request tracking, and approachable interface patterns for public service operations.",
-    tags: ["Figma", "UI/UX", "Procurement"],
-    link: "https://www.figma.com/design/zLOLy6KWwJlFvq3HddIsje/DSWD?node-id=0-1&t=c9s6cqUzpuf1Y0hh-1",
-  },
-];
-
-const certificates = [
-  {
-    title: "Python for Beginners",
-    issued: "May 28, 2026",
-    code: "10278670",
-    file: "/certificates/certificate-1.pdf",
-  },
-  {
-    title: "Getting Started with Full Stack Java Development",
-    issued: "May 23, 2026",
-    code: "10254914",
-    file: "/certificates/certificate.pdf",
-  },
-  {
-    title: "Introduction to SQL",
-    issued: "October 13, 2024",
-    code: "7453153",
-    file: "/certificates/certificate-2.pdf",
-  },
-  {
-    title: "Introduction to Front End Development",
-    issued: "June 2, 2026",
-    code: "10295610",
-    file: "/certificates/certificate-3.pdf",
-  },
-];
-
-function SoftCursor() {
+function Header() {
+  const [open, setOpen] = useState(false);
   useEffect(() => {
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-    if (reducedMotion || coarsePointer) return;
-
-    const dot = document.querySelector(".cursorDot");
-    const ring = document.querySelector(".cursorRing");
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let ringX = mouseX;
-    let ringY = mouseY;
-    let frame;
-
-    const move = (event) => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
-      dot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-    };
-
-    const animate = () => {
-      ringX += (mouseX - ringX) * 0.16;
-      ringY += (mouseY - ringY) * 0.16;
-      ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
-      frame = requestAnimationFrame(animate);
-    };
-
-    const hover = (event) => {
-      document.body.classList.toggle("cursorActive", Boolean(event.target.closest("a, button, input, textarea")));
-    };
-
-    window.addEventListener("mousemove", move);
-    document.addEventListener("mouseover", hover);
-    animate();
-
-    return () => {
-      window.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseover", hover);
-      cancelAnimationFrame(frame);
-      document.body.classList.remove("cursorActive");
-    };
-  }, []);
+    if (!open) return;
+    const old = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const close = (event) => { if (event.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', close);
+    return () => { document.body.style.overflow = old; window.removeEventListener('keydown', close); };
+  }, [open]);
 
   return (
-    <>
-      <span className="cursorDot" aria-hidden="true" />
-      <span className="cursorRing" aria-hidden="true" />
-    </>
+    <header className="site-header" id="site-header">
+      <a className="wordmark" href="#top" onClick={() => setOpen(false)} aria-label="Takahiro — back to top">TAKAHIRO<span>.</span></a>
+      <nav aria-label="Main navigation" className={`main-nav ${open ? 'is-open' : ''}`} id="main-nav">
+        {links.map(({ label, href }) => <a href={href} onClick={() => setOpen(false)} key={href}>{label}</a>)}
+        <a className="nav-resume-mobile" href={profile.resume} target="_blank" rel="noopener noreferrer">Résumé ↗</a>
+      </nav>
+      <a className="nav-resume" href={profile.resume} target="_blank" rel="noopener noreferrer">Résumé <Arrow size={17} /></a>
+      <button type="button" className={`menu-toggle ${open ? 'is-open' : ''}`} aria-label={open ? 'Close menu' : 'Open menu'} aria-controls="main-nav" aria-expanded={open} onClick={() => setOpen((value) => !value)}><span /><span /></button>
+    </header>
   );
 }
 
-function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("top");
-  const [typedRole, setTypedRole] = useState("");
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [showTop, setShowTop] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState("down");
+function Hero() {
+  return (
+    <section className="hero" id="top" aria-labelledby="hero-title">
+      <div className="hero-inner container">
+        <div className="hero-text-wrap">
+          <p className="kicker hero-kicker">CREATIVE DEVELOPMENT</p>
+          <h1 id="hero-title" className="hero-title"><span className="hero-title-line">BUILDING</span><span className="hero-title-line hero-title-outline">DIGITAL</span><span className="hero-title-line">EXPERIENCES<span className="period"></span></span></h1>
+          <div className="hero-foot">
+            <p className="hero-sub">Websites, mobile apps, and automation — built with purpose.</p>
+            <div className="hero-actions"><a className="link-pill link-pill-dark" href="#work">Explore work <Arrow size={18} /></a><a className="link-inline" href={profile.resume} target="_blank" rel="noopener noreferrer">View résumé <Arrow size={17} /></a></div>
+          </div>
+        </div>
+        <div className="hero-objects" aria-hidden="true">
+          <div className="hero-browser hero-browser-a"><BrowserWindow src={projects[0].image} alt="" label="2citieschurch.com" /></div>
+          <div className="hero-browser hero-browser-b"><BrowserWindow src={projects[1].image} alt="" label="jeffstrueckerministries.com" /></div>
+          <div className="hero-phone"><PhoneMockup /></div>
+          <div className="hero-flow"><WorkflowVisual /></div>
+        </div>
+        <div className="hero-bottom"><span>WEB / MOBILE / AUTOMATION</span><span>SCROLL TO EXPLORE ↓</span></div>
+      </div>
+    </section>
+  );
+}
 
-  useEffect(() => {
-    const currentRole = roles[roleIndex];
-    let index = 0;
-    const interval = window.setInterval(() => {
-      index += 1;
-      if (index <= currentRole.length) {
-        setTypedRole(currentRole.slice(0, index));
-      } else if (index > currentRole.length + 18) {
-        setRoleIndex((current) => (current + 1) % roles.length);
-        setTypedRole("");
-        index = 0;
-      }
-    }, 88);
+function MovingShowcase() {
+  return (
+    <section className="kinetic-gallery" aria-label="Animated presentation of websites, mobile app, and automation work">
+      <div className="gallery-inner container">
+        <div className="gallery-title"><span className="kicker">WEB / MOBILE / SYSTEMS</span><h2>WORK IN<br /><em>MOTION</em></h2></div>
+        <div className="gallery-objects">
+          <div className="gallery-object gallery-one"><BrowserWindow src={projects[0].image} label="2 Cities Church" alt="2 Cities Church website" /></div>
+          <div className="gallery-object gallery-two"><BrowserWindow src={projects[1].image} label="Jeff Struecker Ministries" alt="Jeff Struecker Ministries website" /></div>
+          <div className="gallery-object gallery-three"><PhoneMockup /></div>
+          <div className="gallery-object gallery-four"><WorkflowVisual /></div>
+        </div>
+        <p className="gallery-caption">REAL WORK. THOUGHTFUL MOVEMENT.</p>
+      </div>
+    </section>
+  );
+}
 
-    return () => window.clearInterval(interval);
-  }, [roleIndex]);
+function ProjectMedia({ project }) {
+  if (!project.image) return <WorkflowVisual className="project-workflow" />;
+  return <BrowserWindow src={project.image} alt={project.alt} label={project.href.replace(/^https?:\/\//, '').replace(/\/$/, '')} className="project-browser" />;
+}
 
-  useEffect(() => {
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("isVisible");
-        });
-      },
-      { threshold: 0.1 },
-    );
+function SelectedWork() {
+  return (
+    <section className="selected-work section-block" id="work" aria-labelledby="work-heading">
+      <div className="container">
+        <div className="section-intro"><span className="kicker">SELECTED WORK</span><h2 className="section-display" id="work-heading">MADE TO <em>MATTER</em></h2></div>
+        <div className="featured-projects">
+          {projects.map((project) => (
+            <article className="featured-item" key={project.id}>
+              <div className={`featured-visual visual-${project.id}`}>
+                <div className="feature-art"><ProjectMedia project={project} /></div>
+              </div>
+              <div className="featured-copy">
+                <div className="project-topline"><span>{project.type}</span><span>{project.tech}</span></div>
+                <h3>{project.name}</h3>
+                <p>{project.summary}</p>
+                <details className="project-details"><summary>My contribution <span>+</span></summary><p>{project.detail}</p></details>
+                {project.href ? <a className="project-link" href={project.href} target="_blank" rel="noopener noreferrer">Visit live website <Arrow size={18} /></a> : <span className="project-projectnote">Illustrative n8n workflow / project practice</span>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-    const sectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveSection(entry.target.id);
-        });
-      },
-      { rootMargin: "-35% 0px -50% 0px", threshold: 0.01 },
-    );
+function ServicesPanels() {
+  const captions = [
+    { text: 'WEB', label: 'Platforms & front-end' },
+    { text: 'MOBILE', label: 'Flutter applications' },
+    { text: 'SYSTEMS', label: 'Workflow automation' },
+  ];
+  return (
+    <section className="services-panels" aria-labelledby="panels-heading">
+      <div className="panels-intro"><span className="kicker">WHAT I WORK ON</span><h2 id="panels-heading">THREE FIELDS<br />ONE FOCUS</h2></div>
+      <div className="panel-stage">
+        {captions.map((item, index) => <div className={`rise-panel rise-panel-${index + 1}`} key={item.text}><div><h3>{item.text}</h3><p>{item.label}</p></div></div>)}
+      </div>
+    </section>
+  );
+}
 
-    document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
-    document.querySelectorAll("main section[id]").forEach((section) => sectionObserver.observe(section));
+function Experience() {
+  return (
+    <section className="experience-section section-block" id="experience" aria-labelledby="experience-heading">
+      <div className="container">
+        <div className="section-intro intro-light"><span className="kicker">EXPERIENCE</span><h2 className="section-display" id="experience-heading">BEHIND <em>THE BUILD</em></h2></div>
+        <div className="experience-layout">
+          <div className="experience-entries">
+            {experience.map((item) => <article className="experience-entry" key={item.name}><div><h3>{item.name}</h3><p>{item.role}</p><small>{item.tags}</small></div><span className="exp-arrow" aria-hidden="true">↗</span></article>)}
+            <a className="experience-resume" href={profile.resume} target="_blank" rel="noopener noreferrer">Full résumé <Arrow size={18} /></a>
+          </div>
+          <div className="experience-preview-stack" aria-hidden="true">
+            <div className="experience-preview preview-one"><BrowserWindow src={projects[0].image} label="2 Cities Church" alt="" /></div>
+            <div className="experience-preview preview-two"><BrowserWindow src={projects[1].image} label="Jeff Struecker Ministries" alt="" /></div>
+            <div className="experience-preview preview-three"><WorkflowVisual /></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const currentY = window.scrollY;
-      setShowTop(currentY > 600);
-      if (Math.abs(currentY - lastY) > 8) {
-        setScrollDirection(currentY > lastY ? "down" : "up");
-        lastY = currentY;
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+function About() {
+  return (
+    <section className="about-section" id="about" aria-labelledby="about-heading">
+      <div className="about-bloom" aria-hidden="true" />
+      <div className="container about-inner">
+        <div className="about-visual">
+          <div className="portrait-frame"><span className="portrait-fallback" aria-hidden="true">TL.</span><AssetImage src="/profile-photo.jpg" alt={profile.fullName} className="portrait-img" fallback="TAKAHIRO LARGO" loading="lazy" /></div>
+          <div className="about-phone"><PhoneMockup /></div>
+        </div>
+        <div className="about-copy"><span className="kicker">ABOUT ME</span><h2 className="section-display" id="about-heading">A LITTLE<br /><em>ABOUT ME</em></h2><p>I'm Takahiro, a developer from the Philippines working across websites, mobile applications, and workflow automation. I enjoy building thoughtful experiences and reliable systems.</p><a href={profile.resume} target="_blank" rel="noopener noreferrer" className="link-inline">Read my résumé <Arrow size={18} /></a></div>
+      </div>
+    </section>
+  );
+}
 
-    return () => {
-      revealObserver.disconnect();
-      sectionObserver.disconnect();
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
+function MoreWork() {
+  return (
+    <section className="more-section section-block" aria-labelledby="more-heading"><div className="container">
+      <div className="more-head"><h2 id="more-heading">MORE WORK<span></span></h2></div>
+      <div className="more-list">{additional.map((item) => <article className={`more-item ${item.href ? 'has-link' : ''}`} key={item.name}>
+        {item.href ? (
+          <a className="more-row-link" href={item.href} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${item.name} (opens in a new tab)`}>
+            <div className="more-thumbnail"><AssetImage src={item.image} alt={`${item.name} preview`} fallback={item.fallback} loading="lazy" /></div>
+            <span className="more-name"><span className="more-title">{item.name}</span><span className="more-kind">{item.kind}</span></span>
+            <span className="more-arrow" aria-hidden="true"><Arrow size={21} /></span>
+          </a>
+        ) : (
+          <div className="more-row-static">
+            <div className="more-thumbnail"><AssetImage src={item.image} alt={`${item.name} preview`} fallback={item.fallback} loading="lazy" /></div>
+            <span className="more-name"><span className="more-title">{item.name}</span><span className="more-kind">{item.kind}</span></span>
+            <span className="more-nolink" aria-label="Portfolio project; no public link available">↗</span>
+          </div>
+        )}
+      </article>)}</div>
+      <details className="cert-details"><summary>Courses & certificates <span>VIEW ALL +</span></summary><div className="cert-list">{certificates.map((item) => <a href={item.file} key={item.file} target="_blank" rel="noopener noreferrer">{item.name}<Arrow size={16} /></a>)}</div></details>
+    </div></section>
+  );
+}
 
-  useEffect(() => {
-    const cards = document.querySelectorAll(".projectCard:not(.featuredAppCard):not(.sentimentAppCard)");
+function Contact() {
+  return (
+    <section className="contact-section" id="contact" aria-labelledby="contact-heading">
+      <div className="container contact-inner"><span className="kicker">GET IN TOUCH</span><h2 id="contact-heading">LET'S BUILD<br /><em>SOMETHING.</em></h2><div className="contact-cta"><a href={`mailto:${profile.email}`}>{profile.email}<Arrow size={32} /></a><div className="contact-arrow" aria-hidden="true">↗</div></div><div className="contact-social"><a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href={profile.resume} target="_blank" rel="noopener noreferrer">Résumé ↗</a></div></div>
+      <footer className="footer"><span>© {new Date().getFullYear()} TAKAHIRO LARGO</span><span>MADE WITH INTENTION</span><a href="#top">BACK TO TOP ↑</a></footer>
+    </section>
+  );
+}
 
-    const move = (event) => {
-      const card = event.currentTarget;
-      const rect = card.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = `perspective(900px) rotateX(${y * -5}deg) rotateY(${x * 5}deg) translateY(-6px)`;
-    };
+function useScrollChoreography(rootRef) {
+  useGSAP(() => {
+    const scope = rootRef.current;
+    if (!scope) return;
+    const mm = gsap.matchMedia();
+    const reduce = '(prefers-reduced-motion: reduce)';
 
-    const reset = (event) => {
-      event.currentTarget.style.transform = "";
-    };
+    // Desktop-only pinning and scroll-scrubbed, reversible object movement.
+    mm.add({ desktop: '(min-width: 900px)', motion: '(prefers-reduced-motion: no-preference)' }, (context) => {
+      if (!context.conditions.desktop || !context.conditions.motion) return;
+      document.documentElement.classList.add('motion-ready');
+      const hero = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.hero', start: 'top top', end: () => `+=${Math.round(window.innerHeight * 1.55)}`, pin: true, scrub: 1.1, anticipatePin: 1, invalidateOnRefresh: true } });
+      hero.to('.hero-objects', { opacity: 1, duration: .55 }, .30)
+        .to('.hero-title', { yPercent: -18, scale: .88, opacity: .3, transformOrigin: 'left center', duration: 1.0 }, 0)
+        .to('.hero-sub', { opacity: 0, y: -60, duration: .6 }, 0)
+        .to('.hero-actions', { opacity: 0, y: -30, duration: .6 }, 0)
+        .fromTo('.hero-browser-a', { x: '28vw', y: '18vh', rotation: 10, scale: .65 }, { x: '-19vw', y: '-6vh', rotation: -7, scale: 1.02, duration: 1.7 }, 0)
+        .fromTo('.hero-browser-b', { x: '19vw', y: '26vh', rotation: -11, scale: .55 }, { x: '7vw', y: '-17vh', rotation: 7, scale: 1.08, duration: 1.7 }, 0)
+        .fromTo('.hero-phone', { x: '12vw', y: '55vh', rotation: 15, scale: .6 }, { x: '-7vw', y: '-7vh', rotation: -9, scale: 1.12, duration: 1.7 }, 0)
+        .fromTo('.hero-flow', { x: '22vw', y: '75vh', rotation: -9, scale: .7 }, { x: '16vw', y: '10vh', rotation: 4, scale: 1, duration: 1.7 }, 0);
 
-    cards.forEach((card) => {
-      card.addEventListener("mousemove", move);
-      card.addEventListener("mouseleave", reset);
+      const gallery = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.kinetic-gallery', start: 'top top', end: () => `+=${Math.round(window.innerHeight * 1.5)}`, pin: true, scrub: 1.0, anticipatePin: 1, invalidateOnRefresh: true } });
+      gallery.fromTo('.gallery-one', { xPercent: -65, yPercent: 30, rotation: -13, scale: .75 }, { xPercent: 8, yPercent: -13, rotation: 4, scale: 1.04, duration: 1.2 }, 0)
+        .fromTo('.gallery-two', { xPercent: 67, yPercent: -60, rotation: 10, scale: .75 }, { xPercent: -8, yPercent: 17, rotation: -5, scale: 1.08, duration: 1.2 }, 0)
+        .fromTo('.gallery-three', { xPercent: 20, yPercent: 110, rotation: 20, scale: .55 }, { xPercent: -27, yPercent: -30, rotation: -7, scale: 1.05, duration: 1.3 }, 0.05)
+        .fromTo('.gallery-four', { xPercent: 60, yPercent: 130, rotation: -9, scale: .75 }, { xPercent: -17, yPercent: 0, rotation: 4, scale: 1.15, duration: 1.2 }, 0.08)
+        .to('.gallery-title', { scale: .84, y: -65, opacity: .45, transformOrigin: 'left top', duration: 1.2 }, 0);
+
+      const panels = gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.services-panels', start: 'top top', end: () => `+=${Math.round(window.innerHeight * 1.05)}`, pin: true, scrub: .85, anticipatePin: 1, invalidateOnRefresh: true } });
+      panels.fromTo('.rise-panel-1', { yPercent: 101, scaleY: .4 }, { yPercent: 0, scaleY: 1, transformOrigin: 'bottom center', duration: 1 }, 0)
+        .fromTo('.rise-panel-2', { yPercent: 115, scaleY: .45 }, { yPercent: 0, scaleY: 1, transformOrigin: 'bottom center', duration: 1 }, .16)
+        .fromTo('.rise-panel-3', { yPercent: 130, scaleY: .5 }, { yPercent: 0, scaleY: 1, transformOrigin: 'bottom center', duration: 1 }, .32)
+        .to('.panels-intro', { opacity: 0, y: -80, duration: .7 }, .22);
+
+      // Each experience preview is controlled by its matching entry's actual position.
+      gsap.set('.experience-preview:not(.preview-one)', { autoAlpha: 0, y: 42, scale: .91 });
+      gsap.utils.toArray('.experience-entry').forEach((row, i) => {
+        if (i === 0) return;
+        gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 70%', end: 'top 32%', scrub: .65 } })
+          .to(`.experience-preview:nth-child(${i})`, { autoAlpha: 0, y: -35, scale: .9, ease: 'none' }, 0)
+          .to(`.experience-preview:nth-child(${i + 1})`, { autoAlpha: 1, y: 0, scale: 1, ease: 'none' }, 0);
+      });
+      // A color shape expands behind the content, introducing the About section.
+      gsap.fromTo('.about-bloom', { scale: .05 }, { scale: 25, ease: 'none', scrollTrigger: { trigger: '.about-section', start: 'top 90%', end: 'top 15%', scrub: 1, invalidateOnRefresh: true } });
+      gsap.fromTo('.about-visual', { x: -100, rotation: -5 }, { x: 0, rotation: 0, scrollTrigger: { trigger: '.about-section', start: 'top 80%', end: 'top 30%', scrub: .7 }, ease: 'none' });
+      gsap.fromTo('.about-phone', { x: 80, y: 110, rotation: 16 }, { x: 0, y: 0, rotation: -8, ease: 'none', scrollTrigger: { trigger: '.about-section', start: 'top 80%', end: 'top 22%', scrub: .7 } });
+      gsap.fromTo('.contact-arrow', { rotation: -22, y: 95 }, { rotation: 0, y: 0, ease: 'none', scrollTrigger: { trigger: '.contact-section', start: 'top 80%', end: 'top 15%', scrub: .9 } });
     });
 
-    return () => {
-      cards.forEach((card) => {
-        card.removeEventListener("mousemove", move);
-        card.removeEventListener("mouseleave", reset);
+    // Desktop and mobile: GSAP image masking and typographic motion, no autoplay.
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.fromTo('.hero-kicker', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .65, ease: 'power3.out' });
+      gsap.fromTo('.hero-title-line', { yPercent: 105 }, { yPercent: 0, duration: 1.05, ease: 'power3.out', stagger: .12 });
+      gsap.fromTo('.hero-foot', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .8, ease: 'power3.out', delay: .5 });
+      gsap.utils.toArray('.featured-item').forEach((item) => {
+        const art = item.querySelector('.feature-art');
+        const copy = item.querySelector('.featured-copy');
+        gsap.fromTo(art, { clipPath: 'inset(0 0 24% 0)', y: 50, scale: 1.04 }, { clipPath: 'inset(0 0 0% 0)', y: 0, scale: 1, ease: 'none', scrollTrigger: { trigger: item, start: 'top 85%', end: 'top 30%', scrub: .75 } });
+        gsap.fromTo(copy, { y: 50, opacity: .55 }, { y: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: item, start: 'top 84%', end: 'top 40%', scrub: .75 } });
       });
-    };
-  }, []);
+      gsap.utils.toArray('.section-display, .more-head h2, .contact-inner h2').forEach((el) => {
+        gsap.fromTo(el, { y: 55, opacity: .5 }, { y: 0, opacity: 1, scrollTrigger: { trigger: el, start: 'top 91%', end: 'top 58%', scrub: .55 }, ease: 'none' });
+      });
+    });
 
-  const ripple = (event) => {
-    const target = event.currentTarget;
-    const circle = document.createElement("span");
-    const size = Math.max(target.clientWidth, target.clientHeight);
-    const rect = target.getBoundingClientRect();
-    circle.className = "ripple";
-    circle.style.width = circle.style.height = `${size}px`;
-    circle.style.left = `${event.clientX - rect.left - size / 2}px`;
-    circle.style.top = `${event.clientY - rect.top - size / 2}px`;
-    target.appendChild(circle);
-    window.setTimeout(() => circle.remove(), 650);
-  };
+    // Mobile: gentle independent object motion, never pins or scroll hijacking.
+    mm.add({ mobile: '(max-width: 899px)', motion: '(prefers-reduced-motion: no-preference)' }, (context) => {
+      if (!context.conditions.mobile || !context.conditions.motion) return;
+      gsap.fromTo('.hero-browser-a', { y: 60, rotation: -7 }, { y: -12, rotation: -3, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: .8 } });
+      gsap.fromTo('.hero-phone', { y: 100, rotation: 9 }, { y: -18, rotation: -6, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: .8 } });
+      gsap.fromTo('.gallery-object', { y: 28, opacity: .85 }, { y: -24, opacity: 1, ease: 'none', stagger: .06, scrollTrigger: { trigger: '.kinetic-gallery', start: 'top 90%', end: 'bottom 20%', scrub: .7 } });
+    });
 
+    return () => { mm.revert(); document.documentElement.classList.remove('motion-ready'); };
+  }, { scope: rootRef });
+}
+
+export default function App() {
+  const rootRef = useRef(null);
+  useScrollChoreography(rootRef);
   return (
-    <div className={`studioPage scroll-${scrollDirection}`}>
-      <SoftCursor />
-      <div className="ambientOrbs" aria-hidden="true">
-        <span />
-        <span />
-        <span />
-      </div>
-
-      <header className="siteHeader">
-        <nav className="nav" aria-label="Main navigation">
-          <a className="brand" href="#top" onClick={() => setMenuOpen(false)}>
-            Takahiro
-          </a>
-          <button
-            className={`menuButton ${menuOpen ? "open" : ""}`}
-            type="button"
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span />
-            <span />
-          </button>
-          <div className={`mobileOverlay ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(false)} />
-          <div className={`navLinks ${menuOpen ? "open" : ""}`}>
-            {navItems.map((item) => (
-              <a
-                className={activeSection === item ? "active" : ""}
-                href={`#${item}`}
-                key={item}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-        </nav>
-      </header>
-
-      <main id="top">
-        <section className="hero" aria-labelledby="hero-title">
-          <p className="hello reveal">Hello, I'm</p>
-          <h1 className="heroName reveal" id="hero-title">
-            {profile.name}
-            <svg viewBox="0 0 520 34" aria-hidden="true">
-              <path d="M8 20 C 98 2, 182 32, 260 18 S 420 4, 512 18" />
-            </svg>
-          </h1>
-          <p className="typewriter reveal">{typedRole}</p>
-          <p className="heroText reveal">{profile.role} based in {profile.location}, building thoughtful apps and support systems.</p>
-          <div className="heroActions reveal">
-            <a className="button filled" href="#projects" onClick={ripple}>
-              View Work
-            </a>
-            <a className="button ghost" href="#contact">
-              Let's Talk
-            </a>
-          </div>
-          <a className="scrollLeaf" href="#about" aria-label="Scroll to about">
-            <span>~</span>
-          </a>
-        </section>
-
-        <div className="waveDivider" aria-hidden="true">
-          <svg viewBox="0 0 1440 90" preserveAspectRatio="none">
-            <path d="M0,46 C190,105 326,5 520,38 C742,76 858,88 1052,36 C1200,-4 1328,22 1440,58 L1440,90 L0,90 Z" />
-          </svg>
-        </div>
-
-        <section className="section aboutSection" id="about">
-          <div className="aboutGrid">
-            <figure className="photoCard reveal">
-              <img src="/profile-photo.jpg" alt={profile.name} />
-            </figure>
-            <div className="aboutCopy reveal">
-              <p className="sectionLabel">About</p>
-              <h2>A gentle approach to useful digital work.</h2>
-              <p>{profile.bio}</p>
-              <div className="valuePills">
-                {values.map((value) => (
-                  <span key={value}>{value}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="statsGrid">
-            {stats.map(([number, label], index) => (
-              <article className="statCard reveal" style={{ "--delay": `${index * 120}ms` }} key={label}>
-                <strong>{number}+</strong>
-                <span>{label}</span>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section skillsSection" id="skills">
-          <div className="sectionIntro reveal">
-            <p className="sectionLabel">Skills</p>
-            <h2>Tools I use to bring ideas into shape.</h2>
-          </div>
-          <div className="skillGroups">
-            {skillGroups.map((group, groupIndex) => (
-              <article className="skillGroup reveal" style={{ "--delay": `${groupIndex * 120}ms` }} key={group.title}>
-                <h3>{group.title}</h3>
-                <div>
-                  {group.skills.map((skill) => (
-                    <span className="skillPill" key={skill}>
-                      <i aria-hidden="true">*</i>
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section projectsSection" id="projects">
-          <div className="sectionIntro reveal">
-            <p className="sectionLabel">Featured Projects</p>
-            <h2>Things I've Built</h2>
-          </div>
-          <div className="projectList">
-            {projects.map((project, index) => (
-              <article
-                className={`projectCard reveal ${project.featured ? "featuredAppCard" : ""} ${project.sentiment ? "sentimentAppCard" : ""}`}
-                style={{ "--delay": `${index * 120}ms` }}
-                key={project.title}
-              >
-                {project.featured ? (
-                  <div className="appWheelStage" aria-label="2 Cities Church app screenshots">
-                    <div className="appWheel">
-                      {twoCitiesScreenshots.map((screen, screenIndex) => (
-                        <figure className="appWheelItem" style={{ "--i": screenIndex }} key={screen.title}>
-                          <img src={screen.image} alt={`2 Cities Church app ${screen.title} screen`} loading="lazy" />
-                          <figcaption>{screen.title}</figcaption>
-                        </figure>
-                      ))}
-                    </div>
-                    <div className="wheelShadow" aria-hidden="true" />
-                  </div>
-                ) : (
-                  <>
-                    {project.sentiment ? (
-                      <div className="sentimentScrollStage" aria-label="Text Sentiment Analysis app screenshots">
-                        {sentimentScreenshots.map((screen, screenIndex) => (
-                          <figure className="sentimentPhone" style={{ "--i": screenIndex }} key={screen.title}>
-                            <img src={screen.image} alt={`Text Sentiment Analysis app ${screen.title} screen`} loading="lazy" />
-                            <figcaption>{screen.title}</figcaption>
-                          </figure>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="projectIcon" aria-hidden="true">
-                        {project.icon}
-                      </div>
-                    )}
-                  </>
-                )}
-                <div>
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                  <div className="tagRow">
-                    {project.tags.map((tag) => (
-                      <span key={tag}>{tag}</span>
-                    ))}
-                  </div>
-                  <div className="projectActions">
-                    <a href={project.link || "#contact"} target={project.link ? "_blank" : undefined} rel={project.link ? "noreferrer" : undefined}>
-                      View Project
-                    </a>
-                    {!project.link && (
-                      <a href={profile.github} target="_blank" rel="noreferrer">
-                        GitHub
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-          <div className="moreProjects reveal">
-            <a className="button ghost dark" href={profile.github} target="_blank" rel="noreferrer">
-              More Projects
-            </a>
-          </div>
-        </section>
-
-        <section className="section certificateSection" id="certificates">
-          <div className="certificateHero reveal">
-            <div>
-              <p className="sectionLabel">Certificates</p>
-              <h2>Learning Milestones</h2>
-              <p>
-                A small gallery of completed courses that support my growth in programming, databases, and full-stack development.
-              </p>
-            </div>
-            <div className="certificateRibbon" aria-hidden="true">
-              <span>Verified</span>
-              <span>SkillUp</span>
-              <span>Completed</span>
-              <span>Certified</span>
-            </div>
-          </div>
-
-          <div className="certificateMarquee reveal" aria-hidden="true">
-            <span>Python for Beginners / Full Stack Java / SQL / Front End Development / </span>
-            <span>Python for Beginners / Full Stack Java / SQL / Front End Development / </span>
-          </div>
-
-          <div className="certificateGrid">
-            {certificates.map((certificate, index) => (
-              <article className="certificateCard reveal" style={{ "--delay": `${index * 120}ms` }} key={certificate.title}>
-                <a className="certificatePreview" href={certificate.file} target="_blank" rel="noreferrer" aria-label={`Open ${certificate.title} certificate`}>
-                  <object data={`${certificate.file}#toolbar=0&navpanes=0&scrollbar=0`} type="application/pdf" aria-hidden="true">
-                    <span>{certificate.title}</span>
-                  </object>
-                </a>
-                <div className="certificateInfo">
-                  <span>Certificate of Completion</span>
-                  <h3>{certificate.title}</h3>
-                  <p>{certificate.issued}</p>
-                  <small>Code: {certificate.code}</small>
-                  <a href={certificate.file} target="_blank" rel="noreferrer">
-                    View Certificate
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section contactSection" id="contact">
-          <div className="contactShell reveal">
-            <div className="contactIntro">
-              <p className="sectionLabel">Contact</p>
-              <h2>Let's Work Together</h2>
-              <p>Have a project in mind or just want to say hi? My inbox is always open.</p>
-              <div className="socialLinks">
-                <a href={profile.github} target="_blank" rel="noreferrer" aria-label="GitHub">
-                  GH
-                </a>
-                <a href={profile.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
-                  IN
-                </a>
-                <a href={`mailto:${profile.email}`} aria-label="Email">
-                  @
-                </a>
-              </div>
-            </div>
-            <form className="contactForm" onSubmit={(event) => event.preventDefault()}>
-              <label>
-                <input type="text" required />
-                <span>Name</span>
-              </label>
-              <label>
-                <input type="email" required />
-                <span>Email</span>
-              </label>
-              <label>
-                <textarea rows="5" required />
-                <span>Message</span>
-              </label>
-              <button className="button filled submitButton" type="submit" onClick={ripple}>
-                Send Message
-              </button>
-            </form>
-          </div>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <p>{profile.name} - Crafted with care - 2026</p>
-      </footer>
-
-      <a className={`backToTop ${showTop ? "visible" : ""}`} href="#top" aria-label="Back to top">
-        ^
-      </a>
+    <div className="site" ref={rootRef}>
+      <a className="skip-link" href="#work">Skip to work</a>
+      <Header />
+      <main><Hero /><MovingShowcase /><SelectedWork /><ServicesPanels /><Experience /><About /><MoreWork /><Contact /></main>
     </div>
   );
 }
-
-export default App;
